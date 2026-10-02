@@ -1,0 +1,25 @@
+# Homestead
+
+> Homestead is a fictional business. This website is a design concept by Nuit Works (https://nuit.works), a web design studio. No products are sold, nothing is shipped, and no data or payments are collected.
+
+Homestead is presented as a quiet-luxury living room furniture brand based in Malé, Maldives, with a showroom in Malé and Hulhumalé. The concept shows natural materials, slow craftsmanship and complimentary white-glove delivery across Greater Malé. Prices are shown in Maldivian rufiyaa (MVR).
+
+## Pages
+
+- [Home](https://homestead.nuit.works/): hero, featured pieces, craftsmanship teaser, newsletter sign-up
+- [Shop](https://homestead.nuit.works/shop): all six pieces
+- [Story](https://homestead.nuit.works/story): the brand's origin, materials and craftsmanship
+- [Contact](https://homestead.nuit.works/contact): showroom details and a demo contact form
+
+## Products (fictional)
+
+- Hollis Sofa: MVR 52,900
+- Ester Coffee Table: MVR 18,200
+- Anders Floor Lamp: MVR 7,950
+- Nook Bean Bag: MVR 5,900
+- Fell Stool: MVR 3,650
+- Vessel Planter: MVR 2,250
+
+## About this concept
+
+Designed and built by Nuit Works: https://nuit.works

@@ -1,0 +1,370 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-cream text-espresso font-sans antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+  ::selection {
+    background: #d9cfc1;
+    color: #2b241d;
+  }
+  img {
+    @apply block;
+  }
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+  :focus-visible {
+    outline: 1.5px solid #5b4636;
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+@layer components {
+  .label {
+    @apply font-sans text-[11px] uppercase tracking-label text-stone;
+  }
+  .container-site {
+    @apply mx-auto w-full max-w-site px-6 md:px-10;
+  }
+  .serif-display {
+    @apply font-serif font-medium leading-[1.05] tracking-[-0.005em];
+  }
+}
+
+/* ---------- Motion primitives ---------- */
+
+/* Pressable: press feedback (120ms, ease-out) + colour hover (ease). */
+.pressable {
+  transition:
+    transform 120ms var(--ease-out),
+    background-color 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease,
+    opacity 160ms ease;
+}
+.pressable:active {
+  transform: scale(0.98);
+}
+
+/* Underline links: transform-only, origin left. */
+.link-line {
+  position: relative;
+}
+.link-line::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 220ms var(--ease-out);
+}
+.link-line[aria-current='page']::after {
+  transform: scaleX(1);
+}
+@media (hover: hover) and (pointer: fine) {
+  .link-line:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+/* Scroll reveal: opacity + 14px rise, strong ease-out, once. */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 700ms var(--ease-out),
+    transform 700ms var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hero entrance (rare, first-time tier). CSS animation so it stays smooth while assets load. */
+@keyframes hero-settle {
+  from {
+    transform: scale(1.045);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.hero-media {
+  animation: hero-settle 1800ms var(--ease-out) both;
+}
+.rise {
+  animation: rise 800ms var(--ease-out) both;
+  animation-delay: var(--d, 0ms);
+}
+
+/* Navbar: transparent → solid. Only background/backdrop/shadow + transforms change. */
+.nav-bar {
+  background-color: rgba(247, 243, 236, 0);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  box-shadow: 0 1px 0 rgba(43, 36, 29, 0);
+  transition:
+    background-color 320ms ease,
+    box-shadow 320ms ease,
+    backdrop-filter 320ms ease,
+    -webkit-backdrop-filter 320ms ease;
+}
+.nav-bar.is-solid {
+  background-color: rgba(247, 243, 236, 0.86);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 1px 0 rgba(43, 36, 29, 0.07);
+}
+.nav-inner {
+  transform: translateY(14px);
+  transition: transform 360ms var(--ease-out);
+}
+.is-solid .nav-inner {
+  transform: translateY(0);
+}
+.nav-mark {
+  transform: scale(1.14);
+  transform-origin: left center;
+  transition: transform 360ms var(--ease-out);
+}
+.is-solid .nav-mark {
+  transform: scale(1);
+}
+@media (max-width: 767px) {
+  .nav-inner {
+    transform: translateY(6px);
+  }
+  .nav-mark {
+    transform: scale(1.06);
+  }
+}
+
+/* Mobile menu panel */
+.menu-panel {
+  opacity: 0;
+  transform: translateY(-6px);
+  visibility: hidden;
+  transition:
+    opacity 200ms ease,
+    transform 220ms var(--ease-out),
+    visibility 0s linear 220ms;
+}
+.menu-panel[data-open='true'] {
+  opacity: 1;
+  transform: none;
+  visibility: visible;
+  transition:
+    opacity 220ms ease,
+    transform 260ms var(--ease-out),
+    visibility 0s;
+}
+
+/* Product card: white → lifestyle crossfade on hover (fine pointers only). */
+.card-lifestyle {
+  opacity: 0;
+  transition: opacity 380ms ease;
+}
+.card-price-reveal {
+  transition:
+    opacity 260ms ease,
+    transform 320ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .product-card:hover .card-lifestyle,
+  .product-card:focus-within .card-lifestyle {
+    opacity: 1;
+  }
+  .product-card[data-reveal-price='true'] .card-price-reveal {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  .product-card[data-reveal-price='true']:hover .card-price-reveal,
+  .product-card[data-reveal-price='true']:focus-within .card-price-reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Image tiles (instagram strip, story imagery): near-imperceptible lift. */
+.tile-media {
+  transition:
+    transform 900ms var(--ease-out),
+    opacity 300ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .tile:hover .tile-media {
+    transform: scale(1.025);
+  }
+}
+
+/* Cart drawer: slides in on the iOS drawer curve; exits faster along the same path. */
+.drawer-overlay {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 240ms ease,
+    visibility 0s linear 240ms;
+}
+.drawer-overlay[data-open='true'] {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 320ms ease,
+    visibility 0s;
+}
+.drawer {
+  transform: translateX(100%);
+  visibility: hidden;
+  transition:
+    transform 320ms var(--ease-drawer),
+    visibility 0s linear 320ms;
+}
+.drawer[data-open='true'] {
+  transform: translateX(0);
+  visibility: visible;
+  transition:
+    transform 440ms var(--ease-drawer),
+    visibility 0s;
+}
+
+/* Accordion: grid-rows trick (height is tolerated only here). */
+.acc-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 260ms var(--ease-out);
+}
+.acc-body[data-open='true'] {
+  grid-template-rows: 1fr;
+}
+.acc-body > div {
+  overflow: hidden;
+}
+.acc-content {
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+.acc-body[data-open='true'] .acc-content {
+  opacity: 1;
+  transition: opacity 260ms ease 80ms;
+}
+.acc-chevron {
+  transition: transform 240ms var(--ease-out);
+}
+.acc-chevron[data-open='true'] {
+  transform: rotate(180deg);
+}
+
+/* Gallery crossfade */
+.gallery-img {
+  transition: opacity 320ms var(--ease-out);
+}
+
+/* Button label swap (Add to cart → Added) */
+.swap-label {
+  transition:
+    opacity 180ms ease,
+    transform 220ms var(--ease-out);
+}
+
+/* Custom select chevron */
+.select-minimal {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none' stroke='%2375695B' stroke-width='1.2'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0 center;
+  padding-right: 20px;
+}
+
+/* ---------- Reduced motion: fewer and gentler, not zero. ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    transform: none;
+    transition: opacity 400ms ease;
+  }
+  .hero-media {
+    animation: none;
+  }
+  .rise {
+    animation: fade 500ms ease both;
+  }
+  .nav-inner,
+  .nav-mark {
+    transition: none;
+    transform: none;
+  }
+  .menu-panel {
+    transform: none;
+    transition:
+      opacity 180ms ease,
+      visibility 0s linear 180ms;
+  }
+  .menu-panel[data-open='true'] {
+    transition:
+      opacity 180ms ease,
+      visibility 0s;
+  }
+  .drawer {
+    transform: none;
+    opacity: 0;
+    transition:
+      opacity 200ms ease,
+      visibility 0s linear 200ms;
+  }
+  .drawer[data-open='true'] {
+    opacity: 1;
+    transition:
+      opacity 240ms ease,
+      visibility 0s;
+  }
+  .tile:hover .tile-media {
+    transform: none;
+  }
+  .card-price-reveal {
+    transform: none !important;
+  }
+  .pressable:active {
+    transform: none;
+  }
+  .acc-body {
+    transition: none;
+  }
+}

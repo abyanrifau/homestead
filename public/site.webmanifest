@@ -1,0 +1,9 @@
+{
+  "name": "Homestead",
+  "short_name": "Homestead",
+  "icons": [{ "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }],
+  "theme_color": "#F7F3EC",
+  "background_color": "#F7F3EC",
+  "display": "standalone",
+  "start_url": "/"
+}
